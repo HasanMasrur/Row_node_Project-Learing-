@@ -7,11 +7,11 @@
 const http = require('http');
 const url =require('url');
 
-const {StringDecoder} = require('string_decoder');
+const {handleReqRes} = require('./helpers/handleReqRes');
 
 const app ={};
 app.config ={
-    port: 3041,
+    port: 3042,
 };
 
 app.createServer = ()=>{
@@ -21,26 +21,6 @@ app.createServer = ()=>{
     });  
 }
 //handel request response
-app.handleReqRes = (req,res) => {
-const parsedUrl = url.parse(req.url,true);
-const path = parsedUrl.pathname;
-const trimmedPath = path.replace(/^\/+|\/+$/g,'');
-const method = req.method.toLowerCase();
-const queryStringObject = parsedUrl.query;
-const header = req.headers;
-const decoder = new StringDecoder('utf-8');
-let realData ='';
-
-req.on('data',(buffer)=>{
-realData += decoder.write(buffer);
-});
-
-req.on('end',()=>{
-    realData += decoder.end();
-    console.log(realData);
-    res.end('working');
-})
-
-;}
+app.handleReqRes = handleReqRes;
 //start the server
  app.createServer();
